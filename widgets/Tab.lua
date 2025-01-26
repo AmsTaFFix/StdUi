@@ -173,22 +173,39 @@ local TabPanelMethods = {
 ---        title = 'Third'
 ---    }
 ---}
-function StdUi:TabPanel(parent, width, height, tabs, vertical, buttonWidth, buttonHeight)
-	vertical = vertical or false;
+---@param parent Frame
+---@param width number?
+---@param height number?
+---@param tabs table
+---@param isVertical boolean?
+---@param buttonWidth number?
+---@param buttonHeight number?
+function StdUi:TabPanel(parent, width, height, tabs, isVertical, buttonWidth, buttonHeight)
+	isVertical = isVertical or false;
 	buttonWidth = buttonWidth or 160;
 	buttonHeight = buttonHeight or 20;
 
+	---@class StdUi.TabPanel: StdUi.Frame
+	---@field EnumerateTabs fun(self, callback, ...)
+	---@field HideAllFrames fun(self)
+	---@field DrawButtons fun(self)
+	---@field DrawFrames fun(self)
+	---@field Update fun(self, newTabs)
+	---@field GetTabByName fun(self, name)
+	---@field SelectTab fun(self, name)
+	---@field GetSelectedTab fun(self)
+	---@field DoLayout fun(self)
 	local tabFrame = self:Frame(parent, width, height);
 	tabFrame.stdUi = self;
 	tabFrame.tabs = tabs;
-	tabFrame.vertical = vertical;
+	tabFrame.vertical = isVertical;
 	tabFrame.buttonWidth = buttonWidth;
 	tabFrame.buttonHeight = buttonHeight;
 
 	tabFrame.buttonContainer = self:Frame(tabFrame);
 	tabFrame.container = self:Panel(tabFrame);
 
-	if vertical then
+	if isVertical then
 		tabFrame.buttonContainer:SetPoint('TOPLEFT', tabFrame, 'TOPLEFT', 0, 0);
 		tabFrame.buttonContainer:SetPoint('BOTTOMLEFT', tabFrame, 'BOTTOMLEFT', 0, 0);
 		tabFrame.buttonContainer:SetWidth(buttonWidth);

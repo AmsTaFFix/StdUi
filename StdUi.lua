@@ -43,11 +43,14 @@ function StdUi:RegisterWidget(name, func)
 	return false;
 end
 
-function StdUi:InitWidget(widget)
-	widget.isWidget = true;
+---Inject `StdUiWidgetMixin` into any `StdUi.Frame` object. This method mutate the object itself.
+---@param frame StdUi.Frame
+function StdUi:InitWidget(frame)
+	frame.isWidget = true;
 
-	function widget:GetChildrenWidgets()
-		local children = {widget:GetChildren()};
+	function frame:GetChildrenWidgets()
+		local children = {frame:GetChildren()};
+		---@cast children StdUi.Frame[]
 		local result = {};
 		for i = 1, #children do
 			local child = children[i];
@@ -60,6 +63,9 @@ function StdUi:InitWidget(widget)
 	end
 end
 
+---@param obj Frame
+---@param width number?
+---@param height number?
 function StdUi:SetObjSize(obj, width, height)
 	if width then
 		obj:SetWidth(width);
@@ -122,7 +128,7 @@ function StdUi:ApplyBackdrop(frame, type, border, insets)
 	local backdrop = {
 		bgFile   = config.backdrop.texture,
 		edgeFile = config.backdrop.texture,
-		edgeSize = 1,
+		edgeSize = 2,
 	};
 	if insets then
 		backdrop.insets = insets;

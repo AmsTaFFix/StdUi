@@ -9,7 +9,7 @@ if not StdUi:UpgradeNeeded(module, version) then return end;
 
 ---@return StdUi.Frame
 function StdUi:Frame(parent, width, height, inherits)
-	---@class StdUi.Frame : Frame
+	---@class StdUi.Frame : Frame, StdUiWidgetMixin
 	local frame = CreateFrame('Frame', nil, parent, inherits);
 	self:InitWidget(frame);
 	self:SetObjSize(frame, width, height);
@@ -19,7 +19,7 @@ end
 
 ---@return StdUi.Panel
 function StdUi:Panel(parent, width, height, inherits)
-	---@class StdUi.Panel : StdUi.Frame,. BackdropTemplate
+	---@class StdUi.Panel : StdUi.Frame, BackdropTemplate
 	local frame = self:Frame(parent, width, height, inherits);
 	self:ApplyBackdrop(frame, 'panel');
 

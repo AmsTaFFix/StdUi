@@ -248,7 +248,7 @@ end
 
 ---BuildWindow
 ---@param frame Frame
----@param info table
+---@param info StdUiLayoutConfig
 function StdUi:BuildWindow(frame, info)
 	local db = info.database or nil;
 

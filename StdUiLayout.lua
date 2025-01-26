@@ -1,11 +1,11 @@
 --- @class StdUi
-local StdUi = LibStub and LibStub('StdUi', true);
+local StdUi = LibStub and LibStub("StdUi", true);
 
 if not StdUi then
 	return
 end
 
-local module, version = 'Layout', 3;
+local module, version = "Layout", 3;
 if not StdUi:UpgradeNeeded(module, version) then
 	return
 end
@@ -16,37 +16,41 @@ local pairs = pairs;
 local MathMax = math.max;
 local MathFloor = math.floor;
 
+---@class StdUi.LayoutConfigOptions
 local defaultLayoutConfig = {
-	gutter  = 10,
+	---@type number?
+	gutter = 10,
+	---@type number?
 	columns = 12,
+	---@type {top: number?, right: number?, left: number?, bottom: number?}?
 	padding = {
-		top    = 0,
-		right  = 10,
-		left   = 10,
+		top = 0,
+		right = 10,
+		left = 10,
 		bottom = 10,
-	}
+	},
 };
 
 local defaultRowConfig = {
 	margin = {
-		top    = 0,
-		right  = 0,
+		top = 0,
+		right = 0,
 		bottom = 15,
-		left   = 0
-	}
+		left = 0,
+	},
 };
 
 local defaultElementConfig = {
 	margin = {
-		top    = 0,
-		right  = 0,
+		top = 0,
+		right = 0,
 		bottom = 0,
-		left   = 0
-	}
+		left = 0,
+	},
 };
 
 local EasyLayoutRow = {
-	AddElement      = function(self, frame, config)
+	AddElement = function(self, frame, config)
 		if not frame.layoutConfig then
 			frame.layoutConfig = StdUi.Util.tableMerge(defaultElementConfig, config or {});
 		elseif config then
@@ -56,11 +60,11 @@ local EasyLayoutRow = {
 		TableInsert(self.elements, frame);
 	end,
 
-	AddElements     = function(self, ...)
-		local r = { ... };
+	AddElements = function(self, ...)
+		local r = {...};
 		local cfg = TableRemove(r, #r);
 
-		if cfg.column == 'even' then
+		if cfg.column == "even" then
 			cfg.column = MathFloor(self.parent.layout.columns / #r);
 		end
 
@@ -119,7 +123,8 @@ local EasyLayoutRow = {
 					frame:DoLayout();
 				end
 
-				totalHeight = MathMax(totalHeight, frame:GetHeight() + m.bottom + m.top + rowMargin.top + rowMargin.bottom);
+				totalHeight = MathMax(totalHeight,
+					frame:GetHeight() + m.bottom + m.top + rowMargin.top + rowMargin.bottom);
 				return totalHeight;
 			end
 
@@ -129,15 +134,15 @@ local EasyLayoutRow = {
 			frame:SetWidth(w);
 
 			if columnsTaken + col > self.parent.layout.columns then
-				print('Element will not fit row capacity: ' .. l.columns);
+				print("Element will not fit row capacity: " .. l.columns);
 				return totalHeight;
 			end
 
 			-- move it down by rowMargin and element margin
-			frame:SetPoint('TOPLEFT', self.parent, 'TOPLEFT', x, yOffset - m.top - rowMargin.top);
+			frame:SetPoint("TOPLEFT", self.parent, "TOPLEFT", x, yOffset - m.top - rowMargin.top);
 
 			if lc.fullHeight then
-				frame:SetPoint('BOTTOMLEFT', self.parent, 'BOTTOMLEFT', x, m.bottom + rowMargin.bottom);
+				frame:SetPoint("BOTTOMLEFT", self.parent, "BOTTOMLEFT", x, m.bottom + rowMargin.bottom);
 			end
 
 			--each element takes 1 gutter plus column * colWidth, while gutter is inclusive
@@ -153,7 +158,7 @@ local EasyLayoutRow = {
 		end
 
 		return totalHeight;
-	end
+	end,
 }
 
 ---EasyLayoutRow
@@ -162,9 +167,9 @@ local EasyLayoutRow = {
 function StdUi:EasyLayoutRow(parent, config)
 	---@class EasyLayoutRow
 	local row = {
-		parent   = parent,
-		config   = self.Util.tableMerge(defaultRowConfig, config or {}),
-		elements = {}
+		parent = parent,
+		config = self.Util.tableMerge(defaultRowConfig, config or {}),
+		elements = {},
 	};
 
 	for k, v in pairs(EasyLayoutRow) do
@@ -192,13 +197,17 @@ local EasyLayout = {
 		local width = self:GetWidth() - l.padding.left - l.padding.right;
 
 		local y = -l.padding.top;
-		for i = 1, #self.rows do
-			local row = self.rows[i];
-			y = y - row:DrawRow(width, y);
+		if self.rows then
+			for i = 1, #self.rows do
+				local row = self.rows[i];
+				y = y - row:DrawRow(width, y);
+			end
 		end
-	end
+	end,
 };
 
+---@param parent table
+---@param config StdUi.LayoutConfigOptions
 function StdUi:EasyLayout(parent, config)
 	parent.stdUi = self;
 	parent.layout = self.Util.tableMerge(defaultLayoutConfig, config or {});

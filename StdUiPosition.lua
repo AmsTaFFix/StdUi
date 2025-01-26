@@ -1,24 +1,24 @@
 --- @class StdUi
-local StdUi = LibStub and LibStub('StdUi', true);
+local StdUi = LibStub and LibStub("StdUi", true);
 if not StdUi then
 	return
 end
 
-local module, version = 'Position', 2;
+local module, version = "Position", 2;
 if not StdUi:UpgradeNeeded(module, version) then return end;
 
 -- Points
-local Center = 'CENTER';
+local Center = "CENTER";
 
-local Top = 'TOP';
-local Bottom = 'BOTTOM';
-local Left = 'LEFT';
-local Right = 'RIGHT';
+local Top = "TOP";
+local Bottom = "BOTTOM";
+local Left = "LEFT";
+local Right = "RIGHT";
 
-local TopLeft = 'TOPLEFT';
-local TopRight = 'TOPRIGHT';
-local BottomLeft = 'BOTTOMLEFT';
-local BottomRight = 'BOTTOMRIGHT';
+local TopLeft = "TOPLEFT";
+local TopRight = "TOPRIGHT";
+local BottomLeft = "BOTTOMLEFT";
+local BottomRight = "BOTTOMRIGHT";
 
 StdUi.Anchors = {
 	Center = Center,
@@ -111,22 +111,37 @@ function StdUi:GlueBefore(object, referencedObject, topX, topY, bottomX, bottomY
 end
 
 -- More advanced positioning functions
-function StdUi:GlueAcross(object, referencedObject, topLeftX, topLeftY, bottomRightX, bottomRightY)
-	object:SetPoint(TopLeft, referencedObject, TopLeft, topLeftX, topLeftY);
-	object:SetPoint(BottomRight, referencedObject, BottomRight, bottomRightX, bottomRightY);
+---@param frame Frame
+---@param referencedFrame Frame
+---@param topLeftX number
+---@param topLeftY number
+---@param bottomRightX number
+---@param bottomRightY number
+function StdUi:GlueAcross(frame, referencedFrame, topLeftX, topLeftY, bottomRightX, bottomRightY)
+	frame:SetPoint(TopLeft, referencedFrame, TopLeft, topLeftX, topLeftY);
+	frame:SetPoint(BottomRight, referencedFrame, BottomRight, bottomRightX, bottomRightY);
 end
 
 -- Glues object to opposite side of anchor
 function StdUi:GlueOpposite(object, referencedObject, x, y, anchor)
-	if anchor == 'TOP' then 			object:SetPoint('BOTTOM', referencedObject, anchor, x, y);
-	elseif anchor == 'BOTTOM' then		object:SetPoint('TOP', referencedObject, anchor, x, y);
-	elseif anchor == 'LEFT' then		object:SetPoint('RIGHT', referencedObject, anchor, x, y);
-	elseif anchor == 'RIGHT' then		object:SetPoint('LEFT', referencedObject, anchor, x, y);
-	elseif anchor == 'TOPLEFT' then		object:SetPoint('BOTTOMRIGHT', referencedObject, anchor, x, y);
-	elseif anchor == 'TOPRIGHT' then	object:SetPoint('BOTTOMLEFT', referencedObject, anchor, x, y);
-	elseif anchor == 'BOTTOMLEFT' then	object:SetPoint('TOPRIGHT', referencedObject, anchor, x, y);
-	elseif anchor == 'BOTTOMRIGHT' then	object:SetPoint('TOPLEFT', referencedObject, anchor, x, y);
-	else								object:SetPoint('CENTER', referencedObject, anchor, x, y);
+	if anchor == "TOP" then
+		object:SetPoint("BOTTOM", referencedObject, anchor, x, y);
+	elseif anchor == "BOTTOM" then
+		object:SetPoint("TOP", referencedObject, anchor, x, y);
+	elseif anchor == "LEFT" then
+		object:SetPoint("RIGHT", referencedObject, anchor, x, y);
+	elseif anchor == "RIGHT" then
+		object:SetPoint("LEFT", referencedObject, anchor, x, y);
+	elseif anchor == "TOPLEFT" then
+		object:SetPoint("BOTTOMRIGHT", referencedObject, anchor, x, y);
+	elseif anchor == "TOPRIGHT" then
+		object:SetPoint("BOTTOMLEFT", referencedObject, anchor, x, y);
+	elseif anchor == "BOTTOMLEFT" then
+		object:SetPoint("TOPRIGHT", referencedObject, anchor, x, y);
+	elseif anchor == "BOTTOMRIGHT" then
+		object:SetPoint("TOPLEFT", referencedObject, anchor, x, y);
+	else
+		object:SetPoint("CENTER", referencedObject, anchor, x, y);
 	end
 end
 

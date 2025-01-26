@@ -1,27 +1,31 @@
 --- @class StdUi
-local StdUi = LibStub and LibStub('StdUi', true);
+local StdUi = LibStub and LibStub("StdUi", true);
 if not StdUi then
 	return
 end
 
-local module, version = 'Window', 6;
+local module, version = "Window", 6;
 if not StdUi:UpgradeNeeded(module, version) then return end;
 
---- @return StdUi.Window
+---@param parent Frame?
+---@param width number
+---@param height number
+---@param title string
+---@return StdUi.Window
 function StdUi:Window(parent, width, height, title)
-    parent = parent or UIParent;
+	parent = parent or UIParent;
 	---@class StdUi.Window : StdUi.PanelWithTitle
 	local frame = self:PanelWithTitle(parent, width, height, title);
 	frame:SetClampedToScreen(true);
 	frame.titlePanel.isWidget = false;
 	self:MakeDraggable(frame); -- , frame.titlePanel
 
-	local closeBtn = self:Button(frame, 16, 16, 'X');
+	local closeBtn = self:Button(frame, 16, 16, "X");
 	closeBtn.text:SetFontSize(12);
 	closeBtn.isWidget = false;
-	self:GlueTop(closeBtn, frame, -10, -10, 'RIGHT');
+	self:GlueTop(closeBtn, frame, -10, -10, "RIGHT");
 
-	closeBtn:SetScript('OnClick', function(self)
+	closeBtn:SetScript("OnClick", function(self)
 		self:GetParent():Hide();
 	end);
 
@@ -50,15 +54,15 @@ function StdUi:Dialog(title, message, dialogId)
 		window = self.dialogs[dialogId];
 	else
 		window = self:Window(nil, self.config.dialog.width, self.config.dialog.height, title);
-		window:SetPoint('CENTER');
-		window:SetFrameStrata('DIALOG');
+		window:SetPoint("CENTER");
+		window:SetFrameStrata("DIALOG");
 	end
 
 	if window.messageLabel then
 		window.messageLabel:SetText(message);
 	else
 		window.messageLabel = self:Label(window, message);
-		window.messageLabel:SetJustifyH('CENTER');
+		window.messageLabel:SetJustifyH("CENTER");
 		self:GlueAcross(window.messageLabel, window, 5, -10, -5, 5);
 	end
 
@@ -104,10 +108,10 @@ function StdUi:Confirm(title, message, buttons, dialogId)
 			local btn = self:Button(window, btnWidth, btnHeight, btnDefinition.text);
 			btn.window = window;
 
-			self:GlueBottom(btn, window, leftMargin + (i * (btnWidth + btnMargin)), 10, 'LEFT');
+			self:GlueBottom(btn, window, leftMargin + (i * (btnWidth + btnMargin)), 10, "LEFT");
 
 			if btnDefinition.onClick then
-				btn:SetScript('OnClick', btnDefinition.onClick);
+				btn:SetScript("OnClick", btnDefinition.onClick);
 			end
 
 			window.buttons[k] = btn;
