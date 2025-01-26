@@ -1,10 +1,10 @@
 --- @class StdUi
-local StdUi = LibStub and LibStub('StdUi', true);
+local StdUi = LibStub and LibStub("StdUi", true);
 if not StdUi then
 	return
 end
 
-local module, version = 'ScrollTable', 7;
+local module, version = "ScrollTable", 7;
 if not StdUi:UpgradeNeeded(module, version) then
 	return
 end
@@ -20,12 +20,12 @@ local methods = {
 	--- Basic Methods
 	-------------------------------------------------------------
 
-	SetAutoHeight     = function(self)
+	SetAutoHeight = function(self)
 		self:SetHeight((self.numberOfRows * self.rowHeight) + 10);
 		self:Refresh();
 	end,
 
-	SetAutoWidth      = function(self)
+	SetAutoWidth = function(self)
 		local width = 13;
 		for _, col in pairs(self.columns) do
 			width = width + col.width;
@@ -34,7 +34,7 @@ local methods = {
 		self:Refresh();
 	end,
 
-	ScrollToLine      = function(self, line)
+	ScrollToLine = function(self, line)
 		line = Clamp(line, 1, #self.filtered - self.numberOfRows + 1);
 
 		self:DoVerticalScroll(
@@ -51,16 +51,16 @@ local methods = {
 
 	--- Set the column info for the scrolling table
 	--- @usage st:SetColumns(columns)
-	SetColumns        = function(self, columns)
+	SetColumns = function(self, columns)
 		local table = self; -- reference saved for closure
 		self.columns = columns;
 
 		local columnHeadFrame = self.head;
 
 		if not columnHeadFrame then
-			columnHeadFrame = CreateFrame('Frame', nil, self);
-			columnHeadFrame:SetPoint('BOTTOMLEFT', self, 'TOPLEFT', 4, 0);
-			columnHeadFrame:SetPoint('BOTTOMRIGHT', self, 'TOPRIGHT', -4, 0);
+			columnHeadFrame = CreateFrame("Frame", nil, self);
+			columnHeadFrame:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 4, 0);
+			columnHeadFrame:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", -4, 0);
 			columnHeadFrame:SetHeight(self.rowHeight);
 			columnHeadFrame.columns = {};
 			self.head = columnHeadFrame;
@@ -93,11 +93,11 @@ local methods = {
 				column.cells = {};
 			end
 
-			local align = columns[i].align or 'LEFT';
+			local align = columns[i].align or "LEFT";
 			columnFrame.text:SetJustifyH(align);
 			columnFrame.text:SetText(columns[i].name);
 
-			if align == 'LEFT' then
+			if align == "LEFT" then
 				columnFrame.arrow:ClearAllPoints();
 				self.stdUi:GlueRight(columnFrame.arrow, columnFrame, 0, 0, true);
 			else
@@ -112,9 +112,9 @@ local methods = {
 			end
 
 			if i > 1 then
-				columnFrame:SetPoint('LEFT', columnHeadFrame.columns[i - 1], 'RIGHT', 0, 0);
+				columnFrame:SetPoint("LEFT", columnHeadFrame.columns[i - 1], "RIGHT", 0, 0);
 			else
-				columnFrame:SetPoint('LEFT', columnHeadFrame, 'LEFT', 2, 0);
+				columnFrame:SetPoint("LEFT", columnHeadFrame, "LEFT", 2, 0);
 			end
 
 			columnFrame:SetHeight(self.rowHeight);
@@ -142,7 +142,7 @@ local methods = {
 
 	--- Set the number and height of displayed rows
 	--- @usage st:SetDisplayRows(10, 15)
-	SetDisplayRows    = function(self, numberOfRows, rowHeight)
+	SetDisplayRows = function(self, numberOfRows, rowHeight)
 		local table = self; -- reference saved for closure
 		-- should always set columns first
 		self.numberOfRows = numberOfRows;
@@ -156,15 +156,15 @@ local methods = {
 			local rowFrame = self.rows[i];
 
 			if not rowFrame then
-				rowFrame = CreateFrame('Button', nil, self);
+				rowFrame = CreateFrame("Button", nil, self);
 				self.rows[i] = rowFrame;
 
 				if i > 1 then
-					rowFrame:SetPoint('TOPLEFT', self.rows[i - 1], 'BOTTOMLEFT', 0, 0);
-					rowFrame:SetPoint('TOPRIGHT', self.rows[i - 1], 'BOTTOMRIGHT', 0, 0);
+					rowFrame:SetPoint("TOPLEFT", self.rows[i - 1], "BOTTOMLEFT", 0, 0);
+					rowFrame:SetPoint("TOPRIGHT", self.rows[i - 1], "BOTTOMRIGHT", 0, 0);
 				else
-					rowFrame:SetPoint('TOPLEFT', self.scrollFrame, 'TOPLEFT', 1, -1);
-					rowFrame:SetPoint('TOPRIGHT', self.scrollFrame, 'TOPRIGHT', -1, -1);
+					rowFrame:SetPoint("TOPLEFT", self.scrollFrame, "TOPLEFT", 1, -1);
+					rowFrame:SetPoint("TOPRIGHT", self.scrollFrame, "TOPRIGHT", -1, -1);
 				end
 
 				rowFrame:SetHeight(rowHeight);
@@ -179,19 +179,19 @@ local methods = {
 
 				local cell = rowFrame.columns[j];
 				if not cell then
-					cell = CreateFrame('Button', nil, rowFrame);
-					cell.text = self.stdUi:FontString(cell, '');
+					cell = CreateFrame("Button", nil, rowFrame);
+					cell.text = self.stdUi:FontString(cell, "");
 
 					rowFrame.columns[j] = cell;
 
 					-- Add cell reference to column
 					self.columns[j].cells[i] = cell;
 
-					local align = columnData.align or 'LEFT';
+					local align = columnData.align or "LEFT";
 
 					cell.text:SetJustifyH(align);
 					cell:EnableMouse(true);
-					cell:RegisterForClicks('AnyUp');
+					cell:RegisterForClicks("AnyUp");
 
 					if self.cellEvents then
 						for event, handler in pairs(self.cellEvents) do
@@ -209,7 +209,6 @@ local methods = {
 					-- override a column based events
 					if columnData.events then
 						for event, handler in pairs(columnData.events) do
-
 							cell:SetScript(event, function(cellFrame, ...)
 								if table.offset then
 									local rowIndex = table.filtered[i + table.offset];
@@ -223,16 +222,16 @@ local methods = {
 				end
 
 				if j > 1 then
-					cell:SetPoint('LEFT', rowFrame.columns[j - 1], 'RIGHT', 0, 0);
+					cell:SetPoint("LEFT", rowFrame.columns[j - 1], "RIGHT", 0, 0);
 				else
-					cell:SetPoint('LEFT', rowFrame, 'LEFT', 2, 0);
+					cell:SetPoint("LEFT", rowFrame, "LEFT", 2, 0);
 				end
 
 				cell:SetHeight(rowHeight);
 				cell:SetWidth(self.columns[j].width);
 
-				cell.text:SetPoint('TOP', cell, 'TOP', 0, 0);
-				cell.text:SetPoint('BOTTOM', cell, 'BOTTOM', 0, 0);
+				cell.text:SetPoint("TOP", cell, "TOP", 0, 0);
+				cell.text:SetPoint("BOTTOM", cell, "BOTTOM", 0, 0);
 				cell.text:SetWidth(self.columns[j].width - 2 * padding);
 			end
 
@@ -254,7 +253,7 @@ local methods = {
 
 	--- Set the width of a column
 	--- @usage st:SetColumnWidth(2, 65)
-	SetColumnWidth   = function(self, columnNumber, width)
+	SetColumnWidth = function(self, columnNumber, width)
 		self.columns[columnNumber]:SetWidth(width);
 	end,
 
@@ -264,7 +263,7 @@ local methods = {
 
 	--- Resorts the table using the rules specified in the table column info.
 	--- @usage st:SortData()
-	SortData          = function(self, sortBy)
+	SortData = function(self, sortBy)
 		-- sanity check
 		if not (self.sortTable) or (#self.sortTable ~= #self.data) then
 			self.sortTable = {};
@@ -305,35 +304,35 @@ local methods = {
 
 	--- CompareSort function used to determine how to sort column values. Can be overridden in column data or table data.
 	--- @usage used internally.
-	CompareSort       = function(self, rowA, rowB, sortBy)
+	CompareSort = function(self, rowA, rowB, sortBy)
 		local a = self:GetRow(rowA);
 		local b = self:GetRow(rowB);
 		local column = self.columns[sortBy];
 		local idx = column.index;
 
-		local direction = column.sort or column.defaultSort or 'asc';
+		local direction = column.sort or column.defaultSort or "asc";
 
-		if direction:lower() == 'asc' then
+		if direction:lower() == "asc" then
 			return a[idx] > b[idx];
 		else
 			return a[idx] < b[idx];
 		end
 	end,
 
-	Filter            = function(self, rowData)
+	Filter = function(self, rowData)
 		return true;
 	end,
 
 	--- Set a display filter for the table.
 	--- @usage st:SetFilter( function (self, ...) return true end )
-	SetFilter         = function(self, filter, noSort)
+	SetFilter = function(self, filter, noSort)
 		self.Filter = filter;
 		if not noSort then
 			self:SortData();
 		end
 	end,
 
-	DoFilter          = function(self)
+	DoFilter = function(self)
 		local result = {};
 
 		for row = 1, #self.data do
@@ -356,7 +355,7 @@ local methods = {
 	--- @usage st:SetHighLightColor(rowFrame, color)
 	SetHighLightColor = function(self, frame, color)
 		if not frame.highlight then
-			frame.highlight = frame:CreateTexture(nil, 'OVERLAY');
+			frame.highlight = frame:CreateTexture(nil, "OVERLAY");
 			frame.highlight:SetAllPoints(frame);
 		end
 
@@ -383,20 +382,20 @@ local methods = {
 
 	--- Turn on or off selection on a table according to flag. Will not refresh the table display.
 	--- @usage st:EnableSelection(true)
-	EnableSelection   = function(self, flag)
+	EnableSelection = function(self, flag)
 		self.selectionEnabled = flag;
 	end,
 
 	--- Clear the currently selected row. You should not need to refresh the table.
 	--- @usage st:ClearSelection()
-	ClearSelection    = function(self)
+	ClearSelection = function(self)
 		self:SetSelection(nil);
 	end,
 
 	--- Sets the currently selected row to 'realRow'. RealRow is the unaltered index of the data row in your table.
 	--- You should not need to refresh the table.
 	--- @usage st:SetSelection(12)
-	SetSelection      = function(self, rowIndex)
+	SetSelection = function(self, rowIndex)
 		self.selected = rowIndex;
 		self:Refresh();
 	end,
@@ -404,14 +403,14 @@ local methods = {
 	--- Gets the currently selected row.
 	--- Return will be the unaltered index of the data row that is selected.
 	--- @usage st:GetSelection()
-	GetSelection      = function(self)
+	GetSelection = function(self)
 		return self.selected;
 	end,
 
 	--- Gets the currently selected row.
 	--- Return will be the unaltered index of the data row that is selected.
 	--- @usage st:GetSelection()
-	GetSelectedItem   = function(self)
+	GetSelectedItem = function(self)
 		return self:GetRow(self.selected);
 	end,
 
@@ -421,22 +420,22 @@ local methods = {
 
 	--- Sets the data for the scrolling table
 	--- @usage st:SetData(datatable)
-	SetData           = function(self, data)
+	SetData = function(self, data)
 		self.data = data;
 		self:SortData();
 	end,
 
 	--- Returns the data row of the table from the given data row index
 	--- @usage used internally.
-	GetRow            = function(self, rowIndex)
+	GetRow = function(self, rowIndex)
 		return self.data[rowIndex];
 	end,
 
 	--- Returns the cell data of the given row from the given row and column index
 	--- @usage used internally.
-	GetCell           = function(self, row, col)
+	GetCell = function(self, row, col)
 		local rowData = row;
-		if type(row) == 'number' then
+		if type(row) == "number" then
 			rowData = self:GetRow(row);
 		end
 
@@ -446,7 +445,7 @@ local methods = {
 	--- Checks if a row is currently being shown
 	--- @usage st:IsRowVisible(realrow)
 	--- @thanks sapu94
-	IsRowVisible      = function(self, rowIndex)
+	IsRowVisible = function(self, rowIndex)
 		return (rowIndex > self.offset and rowIndex <= (self.numberOfRows + self.offset));
 	end,
 
@@ -456,33 +455,33 @@ local methods = {
 
 	--- Cell update function used to paint each cell.  Can be overridden in column data or table data.
 	--- @usage used internally.
-	DoCellUpdate      = function(table, shouldShow, rowFrame, cellFrame, value, columnData, rowData, rowIndex)
+	DoCellUpdate = function(table, shouldShow, rowFrame, cellFrame, value, columnData, rowData, rowIndex)
 		if shouldShow then
 			local format = columnData.format;
 
-			if type(format) == 'function' then
+			if type(format) == "function" then
 				cellFrame.text:SetText(format(value, rowData, columnData));
-			elseif format == 'money' then
+			elseif format == "money" then
 				value = table.stdUi.Util.formatMoney(value);
 				cellFrame.text:SetText(value);
-			elseif format == 'moneyShort' then
+			elseif format == "moneyShort" then
 				value = table.stdUi.Util.formatMoney(value, true);
 				cellFrame.text:SetText(value);
-			elseif format == 'time' then
+			elseif format == "time" then
 				value = table.stdUi.Util.formatTime(value);
 				cellFrame.text:SetText(value);
-			elseif format == 'number' then
+			elseif format == "number" then
 				value = tostring(value);
 				cellFrame.text:SetText(value);
-			elseif format == 'icon' then
+			elseif format == "icon" then
 				if cellFrame.texture then
 					cellFrame.texture:SetTexture(value);
 				else
 					local iconSize = columnData.iconSize or table.rowHeight;
 					cellFrame.texture = table.stdUi:Texture(cellFrame, iconSize, iconSize, value);
-					cellFrame.texture:SetPoint('CENTER', 0, 0);
+					cellFrame.texture:SetPoint("CENTER", 0, 0);
 				end
-			elseif format == 'custom' then
+			elseif format == "custom" then
 				columnData.renderer(cellFrame, value, rowData, columnData);
 			else
 				cellFrame.text:SetText(value);
@@ -495,14 +494,14 @@ local methods = {
 				color = columnData.color;
 			end
 
-			if type(color) == 'function' then
+			if type(color) == "function" then
 				color = color(table, value, rowData, columnData);
 			end
 
 			if color then
 				cellFrame.text:SetTextColor(color.r, color.g, color.b, color.a);
 			else
-				table.stdUi:SetTextColor(cellFrame.text, 'normal');
+				table.stdUi:SetTextColor(cellFrame.text, "normal");
 			end
 
 			if table.selectionEnabled then
@@ -519,11 +518,11 @@ local methods = {
 				end
 			end
 		else
-			cellFrame.text:SetText('');
+			cellFrame.text:SetText("");
 		end
 	end,
 
-	Refresh           = function(self)
+	Refresh = function(self)
 		self:Update(#self.filtered, self.numberOfRows, self.rowHeight);
 
 		local o = self:GetOffset();
@@ -570,7 +569,7 @@ local methods = {
 	--- Private Methods
 	-------------------------------------------------------------
 
-	UpdateSortArrows  = function(self, sortBy)
+	UpdateSortArrows = function(self, sortBy)
 		if not self.head then
 			return
 		end
@@ -580,8 +579,8 @@ local methods = {
 			if col then
 				if i == sortBy then
 					local column = self.columns[sortBy];
-					local direction = column.sort or column.defaultSort or 'asc';
-					if direction == 'asc' then
+					local direction = column.sort or column.defaultSort or "asc";
+					if direction == "asc" then
 						col.arrow:SetTexCoord(0, 0.5625, 0, 1);
 					else
 						col.arrow:SetTexCoord(0, 0.5625, 1, 0);
@@ -595,7 +594,7 @@ local methods = {
 		end
 	end,
 
-	FireCellEvent     = function(self, event, handler, ...)
+	FireCellEvent = function(self, event, handler, ...)
 		if not handler(self, ...) then
 			if self.cellEvents[event] then
 				self.cellEvents[event](self, ...);
@@ -603,7 +602,7 @@ local methods = {
 		end
 	end,
 
-	FireHeaderEvent   = function(self, event, handler, ...)
+	FireHeaderEvent = function(self, event, handler, ...)
 		if not handler(self, ...) then
 			if self.headerEvents[event] then
 				self.headerEvents[event](self, ...);
@@ -613,14 +612,13 @@ local methods = {
 
 	--- Set the event handlers for various ui events for each cell.
 	--- @usage st:RegisterEvents(events, true)
-	RegisterEvents    = function(self, cellEvents, headerEvents, removeOldEvents)
+	RegisterEvents = function(self, cellEvents, headerEvents, removeOldEvents)
 		local table = self; -- save for closure later
 
 		if cellEvents then
 			-- Register events for each cell
 			for i, rowFrame in ipairs(self.rows) do
 				for j, cell in ipairs(rowFrame.columns) do
-
 					local columnData = self.columns[j];
 
 					-- unregister old events.
@@ -693,7 +691,7 @@ local cellEvents = {
 	end,
 
 	OnClick = function(table, cellFrame, rowFrame, rowData, columnData, rowIndex, button)
-		if button == 'LeftButton' then
+		if button == "LeftButton" then
 			if table:GetSelection() == rowIndex then
 				table:ClearSelection();
 			else
@@ -707,8 +705,7 @@ local cellEvents = {
 
 local headerEvents = {
 	OnClick = function(table, columnFrame, columnHeadFrame, columnIndex, button, ...)
-		if button == 'LeftButton' then
-
+		if button == "LeftButton" then
 			local columns = table.columns;
 			local column = columns[columnIndex];
 
@@ -719,13 +716,13 @@ local headerEvents = {
 				end
 			end
 
-			local sortOrder = 'asc';
+			local sortOrder = "asc";
 
 			if not column.sort and column.defaultSort then
 				-- sort by columns default sort first;
 				sortOrder = column.defaultSort;
-			elseif column.sort and column.sort:lower() == 'asc' then
-				sortOrder = 'dsc';
+			elseif column.sort and column.sort:lower() == "asc" then
+				sortOrder = "dsc";
 			end
 
 			column.sort = sortOrder;
@@ -733,7 +730,7 @@ local headerEvents = {
 
 			return true;
 		end
-	end
+	end,
 };
 
 local ScrollTableUpdateFn = function(self)
@@ -765,7 +762,7 @@ function StdUi:ScrollTable(parent, columns, numRows, rowHeight)
 		scrollTable[methodName] = method;
 	end
 
-	scrollFrame:SetScript('OnVerticalScroll', ScrollTableOnVerticalScroll);
+	scrollFrame:SetScript("OnVerticalScroll", ScrollTableOnVerticalScroll);
 	scrollTable:SortData();
 	scrollTable:SetColumns(scrollTable.columns);
 	scrollTable:UpdateSortArrows();
