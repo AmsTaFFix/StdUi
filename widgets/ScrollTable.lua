@@ -68,6 +68,9 @@ local methods = {
 
 		for i = 1, #columns do
 			local column = self.columns[i];
+			if not column.width then
+				error("column #" .. i .. " does not have a width parameter", 2);
+			end
 			local columnFrame = columnHeadFrame.columns[i];
 			if not columnHeadFrame.columns[i] then
 				columnFrame = self.stdUi:HighlightButton(columnHeadFrame);
