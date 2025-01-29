@@ -88,13 +88,13 @@ local EasyLayoutRow = {
 
 	DrawRow = function(self, parentWidth, yOffset)
 		yOffset = yOffset or 0;
-		local l = self.parent.layout;
-		local g = l.gutter;
+		local parentLayout = self.parent.layout;
+		local parentLayoutGutter = parentLayout.gutter;
 
 		local rowMargin = self.config.margin;
 		local totalHeight = 0;
 		local columnsTaken = 0;
-		local x = g + l.padding.left + rowMargin.left;
+		local x = parentLayoutGutter + parentLayout.padding.left + rowMargin.left;
 
 		-- if row has margins, cut down available width
 		parentWidth = parentWidth - rowMargin.left - rowMargin.right;
@@ -105,18 +105,18 @@ local EasyLayoutRow = {
 			frame:ClearAllPoints();
 
 			-- Frame layout config
-			local lc = frame.layoutConfig;
-			local m = lc.margin;
+			local elementLayoutConfig = frame.layoutConfig;
+			local m = elementLayoutConfig.margin;
 
 			-- take full size
-			if lc.fullSize then
+			if elementLayoutConfig.fullSize then
 				StdUi:GlueAcross(
 					frame,
 					self.parent,
-					l.padding.left,
-					-l.padding.top,
-					-l.padding.right,
-					l.padding.bottom
+					parentLayout.padding.left,
+					-parentLayout.padding.top,
+					-parentLayout.padding.right,
+					parentLayout.padding.bottom
 				);
 
 				if frame.DoLayout then
@@ -128,25 +128,25 @@ local EasyLayoutRow = {
 				return totalHeight;
 			end
 
-			local col = lc.column or l.columns;
-			local w = (parentWidth / (l.columns / col)) - 2 * g;
+			local col = elementLayoutConfig.column or parentLayout.columns;
+			local w = (parentWidth / (parentLayout.columns / col)) - 2 * parentLayoutGutter;
 
 			frame:SetWidth(w);
 
 			if columnsTaken + col > self.parent.layout.columns then
-				print("Element will not fit row capacity: " .. l.columns);
+				print("Element will not fit row capacity: " .. parentLayout.columns);
 				return totalHeight;
 			end
 
 			-- move it down by rowMargin and element margin
 			frame:SetPoint("TOPLEFT", self.parent, "TOPLEFT", x, yOffset - m.top - rowMargin.top);
 
-			if lc.fullHeight then
+			if elementLayoutConfig.fullHeight then
 				frame:SetPoint("BOTTOMLEFT", self.parent, "BOTTOMLEFT", x, m.bottom + rowMargin.bottom);
 			end
 
 			--each element takes 1 gutter plus column * colWidth, while gutter is inclusive
-			x = x + w + 2 * g; -- double the gutter because width subtracts gutter
+			x = x + w + 2 * parentLayoutGutter; -- double the gutter because width subtracts gutter
 
 			-- if that frame is container itself, do layout for it too
 			if frame.DoLayout then
